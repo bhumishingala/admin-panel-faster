@@ -66,7 +66,8 @@ export default function Layout({ childern }) {
         component="main"
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
-        {childern}
+        <Toolbar />
+        { childern }
       </Box>
     </Box>
   );
