@@ -86,7 +86,9 @@ function Products(props) {
     const loadData = () => {
         let localData = JSON.parse(localStorage.getItem("Products"));
 
-        setData(localData);
+        // if (loadData === null) {
+            setData(localData);
+        // }
     }
 
 
@@ -246,11 +248,11 @@ function Products(props) {
                             <DialogActions>
                                 <Button onClick={handleClose}>Cancel</Button>
                                 {
-                                        update ? 
+                                    update ?
                                         <Button type="submit" >Update</Button>
-                                        : 
+                                        :
                                         <Button type="submit" >Submit</Button>
-                                    }
+                                }
                             </DialogActions>
                         </DialogContent>
                     </Form>
