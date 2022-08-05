@@ -1,0 +1,35 @@
+{
+  "products": [
+    {
+      "id": 892,
+      "name": "1",
+      "email": "abc@gmail.com",
+      "price": "78",
+      "quntity": "500"
+    },
+    {
+      "id": 9552,
+      "name": "3",
+      "email": "xyz@gmail.com",
+      "price": "89",
+      "quntity": "800"
+    },
+    {
+      "id": 2056,
+      "name": "5",
+      "email": "123@gmail.com",
+      "price": "78",
+      "quntity": "500"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

@@ -11,6 +11,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { useDispatch, useSelector } from 'react-redux';
+import { addproducts, deleteproducts, getproducts, updateproducts } from '../../redux/action/products_action';
 
 function Products(props) {
     const [open, setOpen] = React.useState(false);
@@ -62,7 +64,7 @@ function Products(props) {
     const { handleSubmit, handleChange, handleBlur, errors, touched, values } = formik;
 
     const handleInsert = (values) => {
-        let localData = JSON.parse(localStorage.getItem("Products"));
+        // let localData = JSON.parse(localStorage.getItem("Products"));
 
         let id = Math.floor(Math.random() * 10000);
         let data = {
@@ -70,14 +72,16 @@ function Products(props) {
             ...values
         }
 
-        if (localData === null) {
-            localStorage.setItem("Products", JSON.stringify([data]));
-        } else {
-            localData.push(data);
-            localStorage.setItem("Products", JSON.stringify(localData));
-        }
+        dispatch(addproducts(data));
 
-        console.log(values, localData, id);
+        // if (localData === null) {
+        //     localStorage.setItem("Products", JSON.stringify([data]));
+        // } else {
+        //     localData.push(data);
+        //     localStorage.setItem("Products", JSON.stringify(localData));
+        // }
+
+        // console.log(values, localData, id);
         handleClose();
         formik.resetForm();
         loadData();
@@ -86,9 +90,9 @@ function Products(props) {
     const loadData = () => {
         let localData = JSON.parse(localStorage.getItem("Products"));
 
-        // if (loadData === null) {
+        if (loadData === null) {
             setData(localData);
-        // }
+        }
     }
 
 
@@ -125,19 +129,22 @@ function Products(props) {
     }
 
     const handleClickUpdate = (values) => {
-        let localData = JSON.parse(localStorage.getItem("Products"));
+        // let localData = JSON.parse(localStorage.getItem("Products"));
 
-        let Udata = localData.map((l) => {
-            if (l.id === values.id) {
-                return values;
-            } else {
-                return l;
-            }
-        });
+        // let Udata = localData.map((l) => {
+        //     if (l.id === values.id) {
+        //         return values;
+        //     } else {
+        //         return l;
+        //     }
+        // });
 
-        localStorage.setItem("Products", JSON.stringify(Udata));
+        // localStorage.setItem("Products", JSON.stringify(Udata));
 
-        console.log(values, Udata);
+        // console.log(values, Udata);
+
+        dispatch(updateproducts(values));
+
         formik.resetForm();
         handleClose();
         loadData();
@@ -145,120 +152,137 @@ function Products(props) {
 
 
     const handleDelete = (params) => {
-        let localData = JSON.parse(localStorage.getItem("Products"))
+        // let localData = JSON.parse(localStorage.getItem("Products"))
 
-        let fData = localData.filter((l) => l.id !== did);
+        // let fData = localData.filter((l) => l.id !== did);
 
-        localStorage.setItem("Products", JSON.stringify(fData));
+        // localStorage.setItem("Products", JSON.stringify(fData));
 
-        console.log(params, fData);
+        // console.log(params, fData);
+
+        dispatch(deleteproducts(did));
 
         handleClose();
         loadData();
     }
 
+    const dispatch = useDispatch();
+    const products = useSelector(state => state.products);
+
     useEffect(() => {
-        loadData();
+        // loadData();
+        dispatch(getproducts());
     }, [])
 
     return (
         <div>
-            <h1>Products</h1>
-            <Button variant="outlined" onClick={handleClickOpen}>
-                Add Products
-            </Button>
-            <div style={{ height: 400, width: '100%' }}>
-                <DataGrid
-                    rows={data}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                />
-            </div>
-            <Dialog
-                open={dopen}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Are you Sure Delete?"}
-                </DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={() => handleDelete()} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog fullWidth open={open} onClose={handleClose}>
-                <DialogTitle>Add Produtcs</DialogTitle>
-                <Formik values={formik}>
-                    <Form onSubmit={handleSubmit}>
-                        <DialogContent>
-                            <TextField
-                                value={values.name}
-                                margin="dense"
-                                name="name"
-                                label="Products Name"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            {errors.name && touched.name ? <p>{errors.name}</p> : ''}
-                            <TextField
-                                value={values.email}
-                                margin="dense"
-                                name="email"
-                                label="Email"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            {errors.email && touched.email ? <p>{errors.email}</p> : ''}
-                            <TextField
-                                value={values.price}
-                                margin="dense"
-                                name="price"
-                                label="Products Price"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            {errors.price && touched.price ? <p>{errors.price}</p> : ''}
-                            <TextField
-                                value={values.quntity}
-                                margin="dense"
-                                name="quntity"
-                                label="Products Quatity"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                            {errors.quntity && touched.quntity ? <p>{errors.quntity}</p> : ''}
-                            <DialogActions>
-                                <Button onClick={handleClose}>Cancel</Button>
-                                {
-                                    update ?
-                                        <Button type="submit" >Update</Button>
-                                        :
-                                        <Button type="submit" >Submit</Button>
-                                }
-                            </DialogActions>
-                        </DialogContent>
-                    </Form>
-                </Formik>
-            </Dialog>
-        </div >
+            {
+                products.isLoading ?
+                    <p>Loading...</p>
+                    :
+                    products.error !== '' ?
+                        <p>{products.error}</p>
+                    :
+                        <div>
+                            <h1>Products</h1>
+                            <Button variant="outlined" onClick={handleClickOpen}>
+                                Add Products
+                            </Button>
+                            <div style={{ height: 400, width: '100%' }}>
+                                <DataGrid
+                                    rows={products.products}
+                                    columns={columns}
+                                    pageSize={5}
+                                    rowsPerPageOptions={[5]}
+                                    checkboxSelection
+                                />
+                            </div>
+                            <Dialog
+                                open={dopen}
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">
+                                    {"Are you Sure Delete?"}
+                                </DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>No</Button>
+                                    <Button onClick={() => handleDelete()} autoFocus>
+                                        Yes
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+                            <Dialog fullWidth open={open} onClose={handleClose}>
+                                <DialogTitle>Add Produtcs</DialogTitle>
+                                <Formik values={formik}>
+                                    <Form onSubmit={handleSubmit}>
+                                        <DialogContent>
+                                            <TextField
+                                                value={values.name}
+                                                margin="dense"
+                                                name="name"
+                                                label="Products Name"
+                                                type="text"
+                                                fullWidth
+                                                variant="standard"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                            {errors.name && touched.name ? <p>{errors.name}</p> : ''}
+                                            <TextField
+                                                value={values.email}
+                                                margin="dense"
+                                                name="email"
+                                                label="Email"
+                                                type="text"
+                                                fullWidth
+                                                variant="standard"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                            {errors.email && touched.email ? <p>{errors.email}</p> : ''}
+                                            <TextField
+                                                value={values.price}
+                                                margin="dense"
+                                                name="price"
+                                                label="Products Price"
+                                                type="text"
+                                                fullWidth
+                                                variant="standard"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                            {errors.price && touched.price ? <p>{errors.price}</p> : ''}
+                                            <TextField
+                                                value={values.quntity}
+                                                margin="dense"
+                                                name="quntity"
+                                                label="Products Quatity"
+                                                type="text"
+                                                fullWidth
+                                                variant="standard"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                            {errors.quntity && touched.quntity ? <p>{errors.quntity}</p> : ''}
+                                            <DialogActions>
+                                                <Button onClick={handleClose}>Cancel</Button>
+                                                {
+                                                    update ?
+                                                        <Button type="submit" >Update</Button>
+                                                        :
+                                                        <Button type="submit" >Submit</Button>
+                                                }
+                                            </DialogActions>
+                                        </DialogContent>
+                                    </Form>
+                                </Formik>
+                            </Dialog>
+                        </div >
+            }
+        </div>
+
     );
 }
 
